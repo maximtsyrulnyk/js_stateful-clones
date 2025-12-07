@@ -1,3 +1,5 @@
+'use strict';
+
 const transformStateWithClones = require('./transformStateWithClones');
 
 test('Should create a new object with a single added property', () => {

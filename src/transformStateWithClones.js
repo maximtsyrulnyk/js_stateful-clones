@@ -1,48 +1,41 @@
-export const transformStateWithClones = (state, actions) => {
-  const history = [];
-  let newState = { ...state };
+'use strict';
+
+/**
+ * @param {Object} state
+ * @param {Object[]} actions
+ *
+ * @return {Object[]}
+ */
+function transformStateWithClones(state, actions) {
+  const result = [];
+  let currentState = { ...state };
 
   for (const action of actions) {
-    const prevState = newState;
+    let newState = { ...currentState };
 
     switch (action.type) {
-      case 'addProperties': {
-        const extraData = action.extraData || {};
-
-        newState = { ...prevState, ...extraData };
-        break;
-      }
-
-      case 'removeProperties': {
-        const keysToRemove = action.keysToRemove || [];
-
-        newState = { ...prevState };
-
-        keysToRemove.forEach((key) => {
-          delete newState[key];
-        });
-
-        break;
-      }
-
-      case 'clear': {
+      case 'clear':
         newState = {};
         break;
-      }
 
-      default: {
-        // Якщо тип дії невідомий — просто клон попереднього стану
-        newState = { ...prevState };
-      }
+      case 'addProperties':
+        Object.assign(newState, action.extraData);
+        break;
+
+      case 'removeProperties':
+        for (const key of action.keysToRemove) {
+          delete newState[key];
+        }
+        break;
+      default:
+        break;
     }
 
-    // Before:
-    // history.push(newState);
-
-    // After:
-    history.push({ ...newState });
-    // або: history.push(Object.assign({}, newState));
+    result.push(newState);
+    currentState = newState;
   }
 
-  return history;
-};
+  return result;
+}
+
+module.exports = transformStateWithClones;
