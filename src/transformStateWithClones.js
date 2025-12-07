@@ -8,12 +8,14 @@ export const transformStateWithClones = (state, actions) => {
     switch (action.type) {
       case 'addProperties': {
         const extraData = action.extraData || {};
+
         newState = { ...prevState, ...extraData };
         break;
       }
 
       case 'removeProperties': {
         const keysToRemove = action.keysToRemove || [];
+
         newState = { ...prevState };
 
         keysToRemove.forEach((key) => {
